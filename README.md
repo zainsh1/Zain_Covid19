@@ -1,4 +1,6 @@
-# Covid-19 Data by Zain Shareef
+# Covid-19 Data Analysis by Zain Shareef
+
+![covid-19](https://github.com/zainsh1/Zain_Covid19/assets/131926841/c2f17a0b-5145-4e42-a0bf-aed480156ff8)
 
 ## Project Overview
 - Data exploration using Microsoft SQL Server database to answer questions regards infections, deaths and vaccinations. The Dataset was taken from [Our World in Data](https://ourworldindata.org/covid-deaths).
