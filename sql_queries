@@ -92,9 +92,7 @@ ORDER BY location, date;
 
 
 SELECT continent, location, date, population, new_tests, new_vaccinations
-FROM covid19 death
-JOIN covid19 vac
-	ON location = location AND date = date
+FROM covid19
 WHERE continent IS NOT NULL
 ORDER BY location, date;
 
@@ -103,9 +101,10 @@ WITH vaccination_by_pop (continent, location, date, population, new_tests, new_v
 AS
 (SELECT continent, location, date, population, new_tests, new_vaccinations,
 SUM(new_vaccinations) OVER (PARTITION BY location ORDER BY location, date) AS total_vaccinations_per_day
-FROM covid19 death
+FROM covid19
 WHERE continent IS NOT NULL
 ORDER BY location, date
+
 SELECT *, (total_vaccinations_per_day/population) * 100 AS rate_vaccionation_per_day
 FROM vaccination_by_pop
 WHERE new_vaccinations IS NOT NULL
@@ -115,7 +114,7 @@ WHERE new_vaccinations IS NOT NULL
 --- Population vs Population fully vaccinated: Rate growth people fully vaccinated per day
 SELECT continent, location, date, population, people_fully_vaccinated, people_fully_vaccinated / population * 100 AS rate_people_fully_vaccinated_per_day
 FROM covid19
-WHERE continent IS NOT NULL AND location = 'United Arab Emirates'
+WHERE continent IS NOT NULL AND location = 'Australia'
 ORDER BY location, date;
 
 
