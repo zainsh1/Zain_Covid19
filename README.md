@@ -2,7 +2,7 @@
 
 ## Project Overview
 - Data exploration using Microsoft SQL Server database to answer questions regards infections, deaths and vaccinations. The Dataset was taken from [Our World in Data](https://ourworldindata.org/covid-deaths).
-- SQL queries available
+- SQL queries available [here](https://github.com/zainsh1/Zain_Covid19/blob/main/sql_queries).
 - Visualization the queries in a dashboard using Tableau.
 
 
