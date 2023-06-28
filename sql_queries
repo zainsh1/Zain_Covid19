@@ -1,0 +1,127 @@
+SELECT * 
+FROM covid19
+order by location, date;
+
+SELECT location, date, total_cases, new_cases, total_deaths, new_deaths, population 
+FROM covid19
+order by location, date;
+
+--- Total Cases vs Total Deaths: likehood of dying
+SELECT location, date, total_cases, total_deaths, ((total_deaths/total_cases) * 100) AS rate_death
+FROM covid19
+order by location, date;
+
+SELECT location, date, total_cases, total_deaths, ((total_deaths/total_cases) * 100) AS rate_death
+FROM covid19
+WHERE location = 'Australia'
+order by location, date;
+
+SELECT location, date, total_cases, total_deaths, ((total_deaths/total_cases) * 100) AS rate_death
+FROM covid19
+WHERE location ILIKE '%states%'
+order by location, date;
+
+--- Comparing for each country the maximum death rate recorded so far
+SELECT continent, location, population, MAX(total_deaths) as highest_death_number, MAX((total_deaths/population)) * 100 AS highest_rate_death
+FROM covid19
+GROUP BY continent, location, population
+HAVING MAX(total_deaths) IS NOT NULL AND population IS NOT NULL AND continent IS NOT NULL
+ORDER BY highest_rate_death DESC;
+
+
+
+--- Total Cases vs Population: Infection rate
+SELECT location, date, population, total_cases, ((total_cases/population) * 100) AS rate_infection
+FROM covid19
+WHERE location = 'Australia'
+order by location, date;
+
+-- Comparing for each country the maximum infection rate recorded so far
+SELECT continent, location, population, MAX(total_cases) as highest_infection_number, MAX((total_cases/population)) * 100 AS highest_rate_infection
+FROM covid19
+GROUP BY continent, location, population
+HAVING MAX(total_cases) IS NOT NULL AND population IS NOT NULL AND continent IS NOT NULL
+ORDER BY highest_rate_infection DESC;
+
+SELECT location, date, population,  MAX(total_cases) as highest_infection_number, MAX((total_cases/population)) * 100 AS highest_rate_infection
+FROM covid19
+GROUP BY location, population, date
+HAVING MAX(total_cases) IS NOT NULL AND population IS NOT NULL
+ORDER BY highest_rate_infection DESC;
+
+
+---- Total death per country
+SELECT location, MAX(total_deaths) as highest_death_number
+FROM covid19
+WHERE continent IS NOT NULL
+GROUP BY location
+HAVING MAX(total_deaths) IS NOT NULL
+ORDER BY highest_death_number DESC;
+
+
+---- Total death per continent, dropping the 'income' groups, world, international and european union
+SELECT location, MAX(total_deaths) as highest_death_number
+FROM covid19
+WHERE continent IS NULL AND location NOT ILIKE '%income%' AND location <> 'World' AND location <> 'International' AND location <> 'European Union'
+GROUP BY location
+ORDER BY highest_death_number DESC;
+
+
+--- Global Numbers
+
+-- Evaluating per each day across the world
+SELECT date, SUM(new_cases) AS total_cases, SUM(new_deaths) AS total_deaths, (SUM(new_deaths) / SUM(new_cases)) * 100 AS rate_death_by_day
+FROM covid19
+WHERE continent IS NOT NULL
+GROUP BY date
+ORDER BY date;
+
+
+SELECT location, population
+FROM covid19
+WHERE continent IS NOT NULL
+GROUP BY location, population
+ORDER BY population DESC
+
+
+
+--- Checking the covid vaccinations table
+SELECT * 
+FROM covid19
+ORDER BY location, date;
+
+
+SELECT continent, location, date, population, new_tests, new_vaccinations
+FROM covid19 death
+JOIN covid19 vac
+	ON location = location AND date = date
+WHERE continent IS NOT NULL
+ORDER BY location, date;
+
+--- Getting the vaccinations growth and rate per day for each country, using partition by and CTE
+WITH vaccination_by_pop (continent, location, date, population, new_tests, new_vaccinations, total_vaccinations_per_day)
+AS
+(SELECT continent, location, date, population, new_tests, new_vaccinations,
+SUM(new_vaccinations) OVER (PARTITION BY location ORDER BY location, date) AS total_vaccinations_per_day
+FROM covid19 death
+WHERE continent IS NOT NULL
+ORDER BY location, date
+SELECT *, (total_vaccinations_per_day/population) * 100 AS rate_vaccionation_per_day
+FROM vaccination_by_pop
+WHERE new_vaccinations IS NOT NULL
+
+
+
+--- Population vs Population fully vaccinated: Rate growth people fully vaccinated per day
+SELECT continent, location, date, population, people_fully_vaccinated, people_fully_vaccinated / population * 100 AS rate_people_fully_vaccinated_per_day
+FROM covid19
+WHERE continent IS NOT NULL AND location = 'United Arab Emirates'
+ORDER BY location, date;
+
+
+--- Top countries rates fully vaccinated
+SELECT location, population, MAX(people_fully_vaccinated) AS total_people_fully_vaccinated, MAX(people_fully_vaccinated) / population * 100 AS rate_people_fully_vaccinated_per_country
+FROM covid19
+WHERE continent IS NOT NULL AND population IS NOT NULL AND people_fully_vaccinated IS NOT NULL
+GROUP BY location, population
+ORDER BY rate_people_fully_vaccinated_per_country DESC;
