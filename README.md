@@ -20,5 +20,5 @@ The dashboard is available [Covid-19 Dashboard](https://public.tableau.com/app/p
 ## Conclusions
 Through the dashboard it can be easily seen:
 * Europe has been the most affected continent regards deaths.
-* Comparing the entire World, Peru has registered the highest death rate (0.609%). If it compares only North America (for example), United States leads the death rate (0.253%).
-* Comparing the entire World, Cyprus has registered the highest infection rate (73.76%). If it compares only North America (for example), Martinique leads the infection rate (62.58%).
+* Comparing the entire World, Peru has registered the highest death rate (0.6481%). If it compares only Oceania (for example), New Zealand leads with a death rate of (0.0586%) followed by Australia (0.0814%).
+* Comparing the entire World, Cyprus has registered the highest infection rate (73.76%). If it compares only Oceania (for example), New Zealand leads the infection rate (46.23%) followed by Australia at (43.76%).
